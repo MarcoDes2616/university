@@ -17,7 +17,6 @@ test("GET /students should return status 200", async() => {
 
 test("POST /students should return status 201", async() => {
     const res = await request(app).post("/students").send(data);
-    console.log(res.body);
     studentId = res.body.id
     expect(res.statusCode).toBe(201);
     expect(res.body.name).toBe(data.name)
