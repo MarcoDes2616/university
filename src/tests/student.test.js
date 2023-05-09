@@ -1,6 +1,7 @@
 const request = require("supertest")
 const Student = require("../models/Student")
 const app = require("../app")
+require("../models")
 
 let studentId;
 let data = {
@@ -13,6 +14,7 @@ test("GET /students should return status 200", async() => {
     const res = await request(app).get("/students");
     expect(res.statusCode).toBe(200);
     expect(res.body).toHaveLength(2);
+    expect(res.body[0].courses).toBeDefined()
 })
 
 test("POST /students should return status 201", async() => {
@@ -26,6 +28,7 @@ test("GET /students/:id to getOne should return status 200", async() => {
     const res = await request(app).get(`/students/${studentId}`);
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe(data.name)
+    expect(res.body.courses).toBeDefined()
 })
 
 test("PUT /students/:id should return status 201", async() => {
