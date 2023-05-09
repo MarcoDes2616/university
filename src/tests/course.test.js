@@ -1,12 +1,19 @@
 const request = require("supertest")
 const Course = require("../models/Course")
-const app = require("../app")
+const app = require("../app");
+const Student = require("../models/Student");
 require("../models")
 
 let courseId;
 let data = {
     name: "React js",
     credits: 3
+}
+let dataStudent = {
+    firstName: "Marlon",
+    lastName: "Cardenas",
+    birthday: "1980-12-10",
+    program: "Ingenieria Civil"
 }
 test("GET /courses should return status 200", async() => {
     const res = await request(app).get("/courses");
@@ -22,6 +29,14 @@ test("POST /courses should return status 201", async() => {
     expect(res.body.name).toBe(data.name)
 })
 
+test("POST /:id/students should return status 201", async() =>{
+    const student = await Student.create(dataStudent);
+    const res = await request(app).post(`/courses/${courseId}/students`).send([student.id]);
+    await student.destroy()
+    expect(res.statusCode).toBe(201);
+    expect(res.body.length).toBe(1)
+})
+
 test("GET /courses/:id to getOne should return status 200", async() => {
     const res = await request(app).get(`/courses/${courseId}`);
     expect(res.statusCode).toBe(200);
@@ -34,6 +49,7 @@ test("PUT /courses/:id should return status 201", async() => {
     expect(res.statusCode).toBe(200);
     expect(res.body.name).toBe("Fundamentos")
 })
+
 
 test("DELETE /courses/:id should return status 204", async() => {
     const res = await request(app).delete(`/courses/${courseId}`);
